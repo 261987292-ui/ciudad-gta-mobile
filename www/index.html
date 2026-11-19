@@ -30,10 +30,19 @@
   <section id="menu" class="menu">
     <h1>CIUDAD <span>GTA</span></h1>
     <p>Mundo abierto ficticio</p>
+    <p id="boot-status" class="boot-status" role="status">Comprobando motor local...</p>
     <button id="start">INICIAR</button>
   </section>
+  <div id="fatal-error" class="fatal-error" role="alert"></div>
   <script src="./js/three.min.js"></script>
   <script src="./js/audio.js"></script>
   <script src="./js/game.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./sw.js").catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>

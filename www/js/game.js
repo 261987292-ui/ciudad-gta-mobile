@@ -1,6 +1,17 @@
 (function(){
 "use strict";
 var canvas=document.getElementById("world"),notice=document.getElementById("notice");
+var bootStatus=document.getElementById("boot-status");
+var fatalError=document.getElementById("fatal-error");
+
+function showFatal(message){
+  if(fatalError){fatalError.textContent=message;fatalError.style.display="block";}
+  if(bootStatus){bootStatus.textContent=message;}
+  say(message);
+}
+window.onerror=function(message){
+  showFatal("Error del juego: "+message);
+};
 var scene,camera,renderer,started=false,keys={},joy={x:0,y:0},joystickPointer=null;
 var player={x:0,z:18,y:1.65,yaw:0,pitch:0,targetYaw:0,health:100,money:0,stamina:100,vertical:0,grounded:true};
 var controls={};
@@ -10,6 +21,8 @@ function say(text){notice.textContent=text;clearTimeout(say.timer);say.timer=set
 
 function init(){
 try{
+if(!window.THREE||typeof THREE.WebGLRenderer!=="function")throw new Error("Librería Three.js no disponible");
+if(!document.createElement("canvas").getContext("webgl")&&!document.createElement("canvas").getContext("experimental-webgl"))throw new Error("WebGL no está disponible en este dispositivo");
 scene=new THREE.Scene();scene.background=new THREE.Color(0x77b7d8);scene.fog=new THREE.Fog(0x77b7d8,35,90);
 camera=new THREE.PerspectiveCamera(68,innerWidth/innerHeight,.05,180);
 try{renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,powerPreference:"high-performance"});}
@@ -37,7 +50,7 @@ building.position.set(bx,h/2,bz);scene.add(building);
 var playerMesh=new THREE.Mesh(new THREE.CapsuleGeometry?new THREE.CapsuleGeometry(.45,1.1,4,8):new THREE.CylinderGeometry(.45,.45,1.1,8),new THREE.MeshStandardMaterial({color:0x2478a8}));
 playerMesh.position.set(player.x,1.4,player.z);scene.add(playerMesh);player.mesh=playerMesh;
 animate();return true;
-}catch(error){say("Error 3D: "+error.message);return false;}
+}catch(error){showFatal("Error 3D: "+error.message);return false;}
 }
 
 var base=document.getElementById("joystick"),stick=document.getElementById("stick");
@@ -64,6 +77,10 @@ canvas.addEventListener("pointermove",function(e){
 ["run"].forEach(function(id){var el=document.getElementById(id);["pointerup","pointercancel","pointerleave"].forEach(function(t){el.addEventListener(t,function(){controls.run=false;});});});
 document.getElementById("weaponButton").addEventListener("click",function(){document.getElementById("weapon").textContent=document.getElementById("weapon").textContent==="PUÑOS"?"BLÁSTER":"PUÑOS";});
 
+if(bootStatus){
+  bootStatus.textContent=window.THREE?"Motor Three.js r128 local cargado":"Motor Three.js no cargado";
+}
+
 function animate(){
 requestAnimationFrame(animate);if(!started)return;
 var dt=Math.min(clock.getDelta(),.08);
@@ -81,5 +98,12 @@ document.getElementById("health").textContent=Math.ceil(player.health);
 document.getElementById("money").textContent="$"+String(player.money).padStart(6,"0");
 renderer.render(scene,camera);
 }
-document.getElementById("start").addEventListener("click",function(){var ok=init();if(ok){started=true;document.getElementById("menu").classList.add("hidden");say("Bienvenido a la ciudad");}});
+document.getElementById("start").addEventListener("click",function(){
+  var ok=init();
+  if(ok){
+    started=true;
+    document.getElementById("menu").classList.add("hidden");
+    say("Bienvenido a la ciudad");
+  }
+});
 })();
