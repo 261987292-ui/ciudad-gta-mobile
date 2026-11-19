@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#0a141c">
+  <title>Ciudad GTA 3D</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="manifest" href="./manifest.json">
+</head>
+<body>
+  <main id="game">
+    <canvas id="world"></canvas>
+    <header class="hud">
+      <div><span>VIDA</span><b id="health">100</b></div>
+      <div><span>DINERO</span><b id="money">$000000</b></div>
+      <div><span>ARMAS</span><b id="weapon">PUÑOS</b></div>
+      <div><span>MISIÓN</span><b id="mission">Explora la ciudad</b></div>
+    </header>
+    <div id="notice"></div>
+    <div id="crosshair">+</div>
+    <div id="joystick"><div id="stick"></div></div>
+    <div class="action-pad">
+      <button id="shoot" class="shoot">DISPARAR</button>
+      <button id="weaponButton">ARMA</button>
+      <button id="run">CORRER</button>
+      <button id="jump">SALTAR</button>
+    </div>
+  </main>
+  <section id="menu" class="menu">
+    <h1>CIUDAD <span>GTA</span></h1>
+    <p>Mundo abierto ficticio</p>
+    <button id="start">INICIAR</button>
+  </section>
+  <script src="./js/three.min.js"></script>
+  <script src="./js/audio.js"></script>
+  <script src="./js/game.js"></script>
+</body>
+</html>
